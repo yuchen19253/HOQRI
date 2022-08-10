@@ -24,7 +24,7 @@ int main () {
     int J[3] = {46952,46951,1592}; //facebook
 //    int J[3] = {610,49961,8215}; //MovieLen
 //    int J[3] = {100,100,100};
-    int K[3] = {100,100,100};
+    int K[3] = {10,10,10};
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
@@ -139,6 +139,7 @@ int main () {
 
         map<tuple<int,int,int>,double> ttmG = spttm(mytensor, U, V, W, K);
 //        print_sptensor("ttm G", ttmG);
+        cout<<"aaaaa"<<endl;
         double *** G = sp2dense(ttmG,K);
 //        cout<< "calculate norm(G) "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         newLoss = norm_tensor(G,K);
