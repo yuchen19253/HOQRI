@@ -21,7 +21,7 @@ int main () {
     bool full = 0; // use thin QR
 
     // J and K
-    int J[3] = {46952,46951,1592}; //facebook
+    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
 //    int J[3] = {610,49961,8215}; //MovieLen
 //    int J[3] = {100,100,100};
     int K[3] = {10,10,10};
@@ -138,15 +138,16 @@ int main () {
 
 
         map<tuple<int,int,int>,double> ttmG = spttm(mytensor, U, V, W, K);
+        cout<< "calculate sparse G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 //        print_sptensor("ttm G", ttmG);
-        cout<<"aaaaa"<<endl;
         double *** G = sp2dense(ttmG,K);
-//        cout<< "calculate norm(G) "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+        cout<< "calculate dense G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         newLoss = norm_tensor(G,K);
+        cout<< "calculate norm(G) "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         lossChange = abs(newLoss - oldLoss);
 
 
-//        cout<< "calculate A1 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+
         // Calculate A1
         double **A1 = TTMcTC(mytensor,G,U,V,W,J,K,1);
         // Calculate new U via QR
@@ -155,12 +156,13 @@ int main () {
                 U[j][k] = A1[j][k];
             }
         }
-//        cout<< "calculate U "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+        cout<< "calculate A1 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+
         qr(U, J[0], K[0]);
 //        print_matrix("newU", U, J[0],K[0]);
+        cout<< "calculate U "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
         // Calculate A2
-//        cout<< "calculate A2 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         double **A2 = TTMcTC(mytensor,G,U,V,W,J,K,2);
         // Calculate new V via QR
         for(int j=0; j<J[1]; j++){
@@ -168,13 +170,15 @@ int main () {
                 V[j][k] = A2[j][k];
             }
         }
+        cout<< "calculate A2 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* execute gramSchmidt to compute QR factorization */
         qr(V, J[1], K[1]);
+        cout<< "calculate V "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newV", V, J[1],K[1]);
 
+
         // Calculate A3
-//        cout<< "calculate A3 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         double **A3 = TTMcTC(mytensor,G,U,V,W,J,K,3);
         // Calculate new W via QR
         for(int j=0; j<J[2]; j++){
@@ -182,8 +186,10 @@ int main () {
                 W[j][k] = A3[j][k];
             }
         }
+        cout<< "calculate A3 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* execute gramSchmidt to compute QR factorization */
         qr(W, J[2], K[2]);
+        cout<< "calculate W "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newW", W, J[2],K[2]);
 
