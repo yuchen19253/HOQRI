@@ -545,6 +545,29 @@ map<tuple<int,int,int>,double> spttm(map<tuple<int,int,int>,double> spX, double 
             }
         }
     }
+    return G;
+}
+
+map<tuple<int,int,int>,double> spttm2(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
+    map<tuple<int,int,int>,double> G;
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(iter=spX.begin(); iter!=spX.end(); iter++){
+        int index_i=get<0>(iter->first);
+        int index_j=get<1>(iter->first);
+        int index_k=get<2>(iter->first);
+        for(int i = 0; i<K[0]; i++){
+            for(int j = 0; j<K[1]; j++) {
+                for (int k = 0; k < K[2]; k++) {
+                    double tmp = 0;
+                    tuple<int, int, int> index(i+1,j+1,k+1);
+                    if(!G.count(index))
+                        G[index] = 0;
+                    tmp = (iter->second) * U[index_i - 1][i] * V[index_j - 1][j] * W[index_k - 1][k];
+                    G[index]+=tmp;
+                }
+            }
+        }
+    }
 
     return G;
 }

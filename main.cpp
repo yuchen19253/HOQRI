@@ -21,15 +21,15 @@ int main () {
     bool full = 0; // use thin QR
 
     // J and K
-//    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-    int J[3] = {610,49961,8215}; //MovieLen
+    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+//    int J[3] = {610,49961,8215}; //MovieLen
 //    int J[3] = {100,100,100};
     int K[3] = {10,10,10};
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
-//    string filename = "/home/yuchen/Desktop/facebook.txt";
-    string filename = "/Users/yc/Desktop/MovieLen.txt";
+    string filename = "/Users/yc/Desktop/facebook.txt"; // /home/yuchen
+//    string filename = "/Users/yc/Desktop/MovieLen.txt";
     tensorfile.open(filename,ios::in);
     if(tensorfile.is_open()){
         cout<<"Open file: "<<filename<<endl;
@@ -115,7 +115,7 @@ int main () {
 //    print_matrix("r3", r3, K[2],K[2]);
 
     // update iteration
-    int iteration = 50;
+    int iteration = 1;
     double newLoss(0), oldLoss(0), lossChange(0);
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
     for(int itr=0; itr <= iteration; itr++){
@@ -136,7 +136,6 @@ int main () {
 //        cout<< "sparse to dense G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 //        double *** G = sp2dense(G3,K);
 //        print_densetensor("G",G,K);
-
 
         map<tuple<int,int,int>,double> ttmG = spttm(mytensor, U, V, W, K);
         cout<< "calculate sparse G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
