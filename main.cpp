@@ -21,14 +21,15 @@ int main () {
     bool full = 0; // use thin QR
 
     // J and K
-    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-//    int J[3] = {610,49961,8215}; //MovieLen
+//    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+    int J[3] = {610,49961,8215}; //MovieLen
 //    int J[3] = {100,100,100};
     int K[3] = {10,10,10};
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
-    string filename = "/home/yuchen/Desktop/facebook.txt";
+//    string filename = "/home/yuchen/Desktop/facebook.txt";
+    string filename = "/Users/yc/Desktop/MovieLen.txt";
     tensorfile.open(filename,ios::in);
     if(tensorfile.is_open()){
         cout<<"Open file: "<<filename<<endl;
