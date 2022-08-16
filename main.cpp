@@ -23,11 +23,13 @@ int main () {
     // J and K
     int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
 //    int J[3] = {610,49961,8215}; //MovieLen
-//    int J[3] = {100,100,100};
     int K[3] = {10,10,10};
+//    int J[3] = {3,3,4};
+//    int K[3] = {2,2,2};
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
+//    string filename = "/Users/yc/Desktop/new.txt";
     string filename = "/Users/yc/Desktop/facebook.txt"; // /home/yuchen
 //    string filename = "/Users/yc/Desktop/MovieLen.txt";
     tensorfile.open(filename,ios::in);

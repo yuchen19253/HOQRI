@@ -793,6 +793,43 @@ double** TTMcTC(map<tuple<int,int,int>,double> X, double*** G, double **U, doubl
     return A;
 }
 
+double** TTMcTC2(map<tuple<int,int,int>,double> X, double*** G, double **U, double **V, double **W, int J[], int K[], int mode){
+    double ** A = new double*[J[mode-1]];
+    for(int index = 0; index < J[mode-1]; index++) {
+        A[index] = new double[K[mode-1]];
+    }
+    for(int j=0; j<J[mode-1]; j++){
+        for(int k=0; k<K[mode-1]; k++) {
+            A[j][k] = 0;
+        }
+    }
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(int k1=0; k1<K[0]; k1++) {
+        for (int k2 = 0; k2 < K[1]; k2++) {
+            for (int k3 = 0; k3 < K[2]; k3++) {
+                for(iter=X.begin(); iter!=X.end(); iter++){
+                    int i1 = get<0>(iter->first)-1;
+                    int i2 = get<1>(iter->first)-1;
+                    int i3 = get<2>(iter->first)-1;
+                    if(mode==1){
+                        A[i1][k1] += (iter->second) * G[k1][k2][k3] * V[i2][k2] * W[i3][k3];
+
+                    } else if(mode==2){
+                        A[i2][k2] += (iter->second) * G[k1][k2][k3] * U[i1][k1] * W[i3][k3];
+
+                    } else if(mode==3){
+                        A[i3][k3] += (iter->second) * G[k1][k2][k3] * U[i1][k1] * V[i2][k2];
+
+                    } else{
+                        cout<<"Wrong mode! Expected 1, 2 or 3."<<endl;
+                    }
+                }
+
+            }
+        }
+    }
+    return A;
+}
 
 
 #endif //HOQRI_LINEARALGEBRA_H
