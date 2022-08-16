@@ -527,6 +527,86 @@ void vec_in_matrix(double *vec, double **matrix, int index, int length){
     }
 }
 
+
+double*** ttm2(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
+    double*** G;
+    G = new double ** [K[0]];
+    for (int i = 0;i < K[0];i++)
+    {
+        G[i] = new double*[K[1]];
+        for (int j = 0;j < K[1];j++)
+        {
+            G[i][j] = new double [K[2]];
+        }
+    }
+
+    for(int i=0; i<K[0]; i++){
+        for(int j=0; j<K[1]; j++){
+            for(int k=0; k<K[2]; k++) {
+                G[i][j][k] = 0;
+            }
+        }
+    }
+
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(int i = 0; i<K[0]; i++){
+        for(int j = 0; j<K[1]; j++){
+            for(int k = 0; k<K[2]; k++){
+                double tmp = 0;
+                for(iter=spX.begin(); iter!=spX.end(); iter++){
+                    int index_i=get<0>(iter->first);
+                    int index_j=get<1>(iter->first);
+                    int index_k=get<2>(iter->first);
+                    tmp += (iter->second) * U[index_i-1][i] * V[index_j-1][j] * W[index_k-1][k];
+                }
+                G[i][j][k]=tmp;
+            }
+        }
+    }
+    return G;
+}
+
+
+double*** ttm(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
+    double***  G;
+    G = new double ** [K[0]];
+    for (int i = 0;i < K[0];i++)
+    {
+        G[i] = new double*[K[1]];
+        for (int j = 0;j < K[1];j++)
+        {
+            G[i][j] = new double [K[2]];
+        }
+    }
+
+    for(int i=0; i<K[0]; i++){
+        for(int j=0; j<K[1]; j++){
+            for(int k=0; k<K[2]; k++) {
+                G[i][j][k] = 0;
+            }
+        }
+    }
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(iter=spX.begin(); iter!=spX.end(); iter++){
+        int index_i=get<0>(iter->first);
+        int index_j=get<1>(iter->first);
+        int index_k=get<2>(iter->first);
+        for(int i = 0; i<K[0]; i++){
+            for(int j = 0; j<K[1]; j++) {
+                for (int k = 0; k < K[2]; k++) {
+                    double tmp = 0;
+                    tmp = (iter->second) * U[index_i - 1][i] * V[index_j - 1][j] * W[index_k - 1][k];
+                    G[i][j][k]+=tmp;
+                }
+            }
+        }
+    }
+
+    return G;
+}
+
+
+
 map<tuple<int,int,int>,double> spttm(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
     map<tuple<int,int,int>,double> G;
     map<tuple<int,int,int>,double>::iterator iter;

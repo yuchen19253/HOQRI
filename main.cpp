@@ -138,11 +138,15 @@ int main () {
 //        cout<< "sparse to dense G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 //        double *** G = sp2dense(G3,K);
 //        print_densetensor("G",G,K);
+//
+//        map<tuple<int,int,int>,double> ttmG = spttm(mytensor, U, V, W, K);
+//        cout<< "calculate sparse G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+////        print_sptensor("ttm G", ttmG);
+//        double *** G2 = sp2dense(ttmG,K);
+//        print_densetensor("G",G2,K);
 
-        map<tuple<int,int,int>,double> ttmG = spttm(mytensor, U, V, W, K);
-        cout<< "calculate sparse G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
-//        print_sptensor("ttm G", ttmG);
-        double *** G = sp2dense(ttmG,K);
+        double *** G = ttm2(mytensor, U, V, W, K);
+
         cout<< "calculate dense G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         newLoss = norm_tensor(G,K);
         cout<< "calculate norm(G) "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
