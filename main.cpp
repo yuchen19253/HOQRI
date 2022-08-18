@@ -21,16 +21,16 @@ int main () {
     bool full = 0; // use thin QR
 
     // J and K
-    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+//    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
 //    int J[3] = {610,49961,8215}; //MovieLen
-    int K[3] = {10,10,10};
-//    int J[3] = {3,3,4};
-//    int K[3] = {2,2,2};
+//    int K[3] = {10,10,10};
+    int J[3] = {3,3,4};
+    int K[3] = {2,2,2};
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
-//    string filename = "/Users/yc/Desktop/new.txt";
-    string filename = "/Users/yc/Desktop/facebook.txt"; // /home/yuchen
+    string filename = "/home/yuchen/Desktop/mytensor.txt";
+//    string filename = "/home/yuchen/Desktop/facebook.txt"; // /home/yuchen
 //    string filename = "/Users/yc/Desktop/MovieLen.txt";
     tensorfile.open(filename,ios::in);
     if(tensorfile.is_open()){
@@ -117,7 +117,7 @@ int main () {
 //    print_matrix("r3", r3, K[2],K[2]);
 
     // update iteration
-    int iteration = 1;
+    int iteration = 50;
     double newLoss(0), oldLoss(0), lossChange(0);
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
     for(int itr=0; itr <= iteration; itr++){
@@ -145,7 +145,10 @@ int main () {
 //        double *** G2 = sp2dense(ttmG,K);
 //        print_densetensor("G",G2,K);
 
-        double *** G = ttm2(mytensor, U, V, W, K);
+        double *** G = ttm(mytensor, U, V, W, K);
+        double *** G2 = ttm_update(mytensor, U, V, W, K);
+        print_densetensor("G",G,K);
+        print_densetensor("G2",G2,K);
 
         cout<< "calculate dense G "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         newLoss = norm_tensor(G,K);
@@ -162,11 +165,15 @@ int main () {
                 U[j][k] = A1[j][k];
             }
         }
+        print_matrix("A1",A1,J[0],K[0]);
+        double **A12 = TTMcTC_update(mytensor,G,U,V,W,J,K,1);
+        print_matrix("A12",A12,J[0],K[0]);
+
         cout<< "calculate A1 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
         qr(U, J[0], K[0]);
 //        print_matrix("newU", U, J[0],K[0]);
-        cout<< "calculate U "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+//        cout<< "calculate U "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
         // Calculate A2
         double **A2 = TTMcTC(mytensor,G,U,V,W,J,K,2);
@@ -176,10 +183,13 @@ int main () {
                 V[j][k] = A2[j][k];
             }
         }
+        print_matrix("A2",A2,J[0],K[0]);
+        double **A22 = TTMcTC_update(mytensor,G,U,V,W,J,K,2);
+        print_matrix("A22",A22,J[0],K[0]);
         cout<< "calculate A2 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* execute gramSchmidt to compute QR factorization */
         qr(V, J[1], K[1]);
-        cout<< "calculate V "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+//        cout<< "calculate V "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newV", V, J[1],K[1]);
 
@@ -192,10 +202,13 @@ int main () {
                 W[j][k] = A3[j][k];
             }
         }
+        print_matrix("A3",A3,J[0],K[0]);
+        double **A32 = TTMcTC_update(mytensor,G,U,V,W,J,K,3);
+        print_matrix("A32",A32,J[0],K[0]);
         cout<< "calculate A3 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* execute gramSchmidt to compute QR factorization */
         qr(W, J[2], K[2]);
-        cout<< "calculate W "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+//        cout<< "calculate W "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newW", W, J[2],K[2]);
 

@@ -566,7 +566,6 @@ double*** ttm2(map<tuple<int,int,int>,double> spX, double ** U, double ** V, dou
     return G;
 }
 
-
 double*** ttm(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
     double***  G;
     G = new double ** [K[0]];
@@ -594,8 +593,49 @@ double*** ttm(map<tuple<int,int,int>,double> spX, double ** U, double ** V, doub
         for(int i = 0; i<K[0]; i++){
             for(int j = 0; j<K[1]; j++) {
                 for (int k = 0; k < K[2]; k++) {
-                    double tmp = 0;
-                    tmp = (iter->second) * U[index_i - 1][i] * V[index_j - 1][j] * W[index_k - 1][k];
+                    G[i][j][k]+= (iter->second) * U[index_i-1][i] * V[index_j-1][j] * W[index_k-1][k];;
+                }
+            }
+        }
+    }
+
+    return G;
+}
+
+double*** ttm_update(map<tuple<int,int,int>,double> spX, double ** U, double ** V, double ** W, int K[]){
+    double***  G;
+    G = new double ** [K[0]];
+    for (int i = 0;i < K[0];i++)
+    {
+        G[i] = new double*[K[1]];
+        for (int j = 0;j < K[1];j++)
+        {
+            G[i][j] = new double [K[2]];
+        }
+    }
+
+    for(int i=0; i<K[0]; i++){
+        for(int j=0; j<K[1]; j++){
+            for(int k=0; k<K[2]; k++) {
+                G[i][j][k] = 0;
+            }
+        }
+    }
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(iter=spX.begin(); iter!=spX.end(); iter++){
+        int index_i=get<0>(iter->first);
+        int index_j=get<1>(iter->first);
+        int index_k=get<2>(iter->first);
+        double tmp = (iter->second) ;
+        double tmp_i = tmp;
+        for(int i = 0; i<K[0]; i++){
+            tmp = tmp_i;
+            tmp *= U[index_i - 1][i];
+            tmp_i = tmp;
+            for(int j = 0; j<K[1]; j++) {
+                tmp *= V[index_j - 1][j];
+                for (int k = 0; k < K[2]; k++) {
+                    tmp *= W[index_k - 1][k];
                     G[i][j][k]+=tmp;
                 }
             }
@@ -863,6 +903,64 @@ double** TTMcTC(map<tuple<int,int,int>,double> X, double*** G, double **U, doubl
                 for (int k2 = 0; k2 < K[1]; k2++)
                     for (int k3 = 0; k3 < K[2]; k3++)
                         A[i3][k3] += (iter->second) * G[k1][k2][k3] * U[i1][k1] * V[i2][k2];
+            }
+
+        } else{
+            cout<<"Wrong mode! Expected 1, 2 or 3."<<endl;
+        }
+    }
+
+    return A;
+}
+
+double** TTMcTC_update(map<tuple<int,int,int>,double> X, double*** G, double **U, double **V, double **W, int J[], int K[], int mode){
+    double ** A = new double*[J[mode-1]];
+    for(int index = 0; index < J[mode-1]; index++) {
+        A[index] = new double[K[mode-1]];
+    }
+    for(int j=0; j<J[mode-1]; j++){
+        for(int k=0; k<K[mode-1]; k++) {
+            A[j][k] = 0;
+        }
+    }
+    map<tuple<int,int,int>,double>::iterator iter;
+    for(iter=X.begin(); iter!=X.end(); iter++){
+        int i1 = get<0>(iter->first)-1;
+        int i2 = get<1>(iter->first)-1;
+        int i3 = get<2>(iter->first)-1;
+        double tmp = (iter->second);
+        if(mode==1){
+            for(int k1=0; k1<K[0]; k1++) {
+                for (int k2 = 0; k2 < K[1]; k2++) {
+                    tmp *= V[i2][k2];
+                    for (int k3 = 0; k3 < K[2]; k3++) {
+                        tmp *= G[k1][k2][k3] * W[i3][k3];
+                        A[i1][k1] += tmp;
+                    }
+                }
+            }
+
+        } else if(mode==2){
+            for(int k1=0; k1<K[0]; k1++) {
+                tmp *= U[i1][k1];
+                for (int k2 = 0; k2 < K[1]; k2++) {
+                    for (int k3 = 0; k3 < K[2]; k3++) {
+                        tmp *= G[k1][k2][k3] * W[i3][k3];
+                        A[i2][k2] += tmp;
+                    }
+                }
+            }
+
+        } else if(mode==3){
+            for(int k1=0; k1<K[0]; k1++) {
+                tmp *= U[i1][k1];
+                for (int k2 = 0; k2 < K[1]; k2++) {
+                    tmp *= V[i2][k2];
+                    for (int k3 = 0; k3 < K[2]; k3++) {
+                        tmp *= G[k1][k2][k3];
+                        A[i3][k3] += tmp;
+                    }
+                }
             }
 
         } else{
