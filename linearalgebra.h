@@ -593,7 +593,7 @@ double*** ttm(map<tuple<int,int,int>,double> spX, double ** U, double ** V, doub
         for(int i = 0; i<K[0]; i++){
             for(int j = 0; j<K[1]; j++) {
                 for (int k = 0; k < K[2]; k++) {
-                    G[i][j][k]+= (iter->second) * U[index_i-1][i] * V[index_j-1][j] * W[index_k-1][k];;
+                    G[i][j][k]+= (iter->second) * U[index_i-1][i] * V[index_j-1][j] * W[index_k-1][k];
                 }
             }
         }
@@ -627,16 +627,12 @@ double*** ttm_update(map<tuple<int,int,int>,double> spX, double ** U, double ** 
         int index_j=get<1>(iter->first);
         int index_k=get<2>(iter->first);
         double tmp = (iter->second) ;
-        double tmp_i = tmp;
         for(int i = 0; i<K[0]; i++){
-            tmp = tmp_i;
-            tmp *= U[index_i - 1][i];
-            tmp_i = tmp;
+            double tmp_U = tmp * U[index_i - 1][i];
             for(int j = 0; j<K[1]; j++) {
-                tmp *= V[index_j - 1][j];
+                double tmp_UV = tmp_U * V[index_j - 1][j];
                 for (int k = 0; k < K[2]; k++) {
-                    tmp *= W[index_k - 1][k];
-                    G[i][j][k]+=tmp;
+                    G[i][j][k]+=tmp_UV*W[index_k - 1][k];
                 }
             }
         }
@@ -930,35 +926,34 @@ double** TTMcTC_update(map<tuple<int,int,int>,double> X, double*** G, double **U
         int i3 = get<2>(iter->first)-1;
         double tmp = (iter->second);
         if(mode==1){
-            for(int k1=0; k1<K[0]; k1++) {
+            for (int k3 = 0; k3 < K[2]; k3++){
+                double tmp_W = tmp * W[i3][k3];
                 for (int k2 = 0; k2 < K[1]; k2++) {
-                    tmp *= V[i2][k2];
-                    for (int k3 = 0; k3 < K[2]; k3++) {
-                        tmp *= G[k1][k2][k3] * W[i3][k3];
-                        A[i1][k1] += tmp;
+                    double tmp_VW = tmp_W * V[i2][k2];
+                     for(int k1=0; k1<K[0]; k1++) {
+                        A[i1][k1] += G[k1][k2][k3] * tmp_VW ;
                     }
                 }
             }
 
         } else if(mode==2){
             for(int k1=0; k1<K[0]; k1++) {
-                tmp *= U[i1][k1];
-                for (int k2 = 0; k2 < K[1]; k2++) {
-                    for (int k3 = 0; k3 < K[2]; k3++) {
-                        tmp *= G[k1][k2][k3] * W[i3][k3];
-                        A[i2][k2] += tmp;
+                double tmp_U = tmp * U[i1][k1];
+                for (int k3 = 0; k3 < K[2]; k3++)  {
+                    double tmp_UW = tmp_U* W[i3][k3];
+                    for (int k2 = 0; k2 < K[1]; k2++){
+                        A[i2][k2] += G[k1][k2][k3] * tmp_UW;
                     }
                 }
             }
 
         } else if(mode==3){
             for(int k1=0; k1<K[0]; k1++) {
-                tmp *= U[i1][k1];
+                double tmp_U = tmp * U[i1][k1];
                 for (int k2 = 0; k2 < K[1]; k2++) {
-                    tmp *= V[i2][k2];
+                    double tmp_UV = tmp_U * V[i2][k2];
                     for (int k3 = 0; k3 < K[2]; k3++) {
-                        tmp *= G[k1][k2][k3];
-                        A[i3][k3] += tmp;
+                        A[i3][k3] += G[k1][k2][k3] * tmp_UV;
                     }
                 }
             }
