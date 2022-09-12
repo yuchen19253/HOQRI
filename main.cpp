@@ -22,7 +22,8 @@ int main () {
 
     // J and K
 //    int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
-    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+//    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+    int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
 //    int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
 //    int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
 
