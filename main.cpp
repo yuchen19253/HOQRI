@@ -23,18 +23,23 @@ int main () {
     // J and K
 //    int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
 //    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-    int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
+//    int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
 //    int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
 //    int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
+    int J[3] = {5,5,5};
 
-    int K[3] = {10,10,10};
+//    int K[3] = {10,10,10};
 //    int J[3] = {3,3,4};
-//    int K[3] = {2,2,2};
+    int K[3] = {2,2,2};
+    if(J[0]<K[0]||J[1]<K[1]||J[2]<K[2]){
+        cout<<"Rank couldn't be large than original size!";
+        return 0;
+    }
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
-//    string filename = "/home/yuchen/Desktop/mytensor.txt";
-    string filename = "/home/yuchen/Desktop/facebook.txt"; // /home/yuchen
+    string filename = "/home/yuchen/Desktop/mytensor.txt";
+//    string filename = "/home/yuchen/Desktop/facebook.txt"; // /home/yuchen
 //    string filename = "/Users/yc/Desktop/MovieLen.txt";
     tensorfile.open(filename,ios::in);
     if(tensorfile.is_open()){
@@ -79,19 +84,23 @@ int main () {
     uniform_real_distribution<double> u(0,1);
     for(int j=0; j<J[0]; j++){
         for(int k=0; k<K[0]; k++) {
-            U[j][k] = u(e);
+//            U[j][k] = u(e);
+            U[j][k] = 1;
         }
     }
     for(int j=0; j<J[1]; j++){
         for(int k=0; k<K[1]; k++) {
-            V[j][k] = u(e);
+//            V[j][k] = u(e);
+            V[j][k] = 1;
         }
     }
     for(int j=0; j<J[2]; j++){
         for(int k=0; k<K[2]; k++) {
-            W[j][k] = u(e);
+//            W[j][k] = u(e);
+            W[j][k] = 1;
         }
     }
+
     /* allocate memory for the matrices Rs */
     double ** r1 = new double*[K[0]];
     double ** r2 = new double*[K[1]];
@@ -105,17 +114,17 @@ int main () {
     for(int index = 0; index < K[2]; index++) {
         r3[index] = new double[K[2]];
     }
-//    print_matrix("U", U, J[0], K[0]);
-//    print_matrix("V", V, J[1], K[1]);
-//    print_matrix("W", W, J[2], K[2]);
+    print_matrix("U", U, J[0], K[0]);
+    print_matrix("V", V, J[1], K[1]);
+    print_matrix("W", W, J[2], K[2]);
 
     qr(U, J[0], K[0]);
     qr(V, J[1], K[1]);
     qr(W, J[2], K[2]);
 
-//    print_matrix("U", U, J[0], K[0]);
-//    print_matrix("V", V, J[1], K[1]);
-//    print_matrix("W", W, J[2], K[2]);
+    print_matrix("U", U, J[0], K[0]);
+    print_matrix("V", V, J[1], K[1]);
+    print_matrix("W", W, J[2], K[2]);
 //    print_matrix("r1", r1, K[0],K[0]);
 //    print_matrix("r2", r2, K[1],K[1]);
 //    print_matrix("r3", r3, K[2],K[2]);
