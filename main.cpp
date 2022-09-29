@@ -21,15 +21,15 @@ int main () {
     bool full = 0; // use thin QR
 
     // J and K
-//    int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
-//    int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-//    int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
-//    int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
-    int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
-//    int J[3] = {4,4,4};
+//   int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
+   int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+//   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
+//   int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
+//   int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
+//   int J[3] = {5,5,5};
 
-    int K[3] = {10,10,10};
-//    int K[3] = {2,2,2};
+   int K[3] = {10,10,10};
+//   int K[3] = {4,3,2};
     if(J[0]<K[0]||J[1]<K[1]||J[2]<K[2]){
         cout<<"Rank couldn't be large than original size!";
         return 0;
@@ -38,9 +38,11 @@ int main () {
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
 //    string filename = "/home/yuchen/Desktop/mytensor.txt";
-//    string filename = "/home/yuchen/Desktop/facebook.txt"; // /Users/yc
-    string filename = "/home/yuchen/Desktop/MovieLen.txt";
+//    string filename = "/home/yuchen/Desktop/data/Large_MovieLen.txt";
+    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
+//    string filename = "/home/yuchen/Desktop/MovieLen.txt";
 //    string filename = "/home/yuchen/Desktop/Last.txt";
+//    string filename = "/home/yuchen/Desktop/Delicious.txt";
     tensorfile.open(filename,ios::in);
 
     if(tensorfile.is_open()){
@@ -68,6 +70,15 @@ int main () {
 
 
     // initialize U, V and W
+//    double U[J[0]][K[0]];
+//    double V[J[1]][K[1]];
+//    double W[J[2]][K[2]];
+//    fill(U[0], U[0] + J[0] * K[0], 0);
+//    fill(V[0], V[0] + J[1] * K[1], 0);
+//    fill(W[0], W[0] + J[2] * K[2], 0);
+
+    map<int[],double> G1=spttm_mode(mytensor,U,J,K[0],1);
+
     double **U = new double*[J[0]];
     for(int index = 0; index < J[0]; index++) {
         U[index] = new double[K[0]];
@@ -80,53 +91,82 @@ int main () {
     for(int index = 0; index < J[2]; index++) {
         W[index] = new double[K[2]];
     }
-
-    default_random_engine e(time(0));
-    uniform_real_distribution<double> u(0,1);
-    for(int j=0; j<J[0]; j++){
-        for(int k=0; k<K[0]; k++) {
-//            U[j][k] = u(e);
-            U[j][k] = 1;
+    for(int i=0; i<J[0]; i++){
+        for(int j=0; j<K[0]; j++) {
+            U[i][j] = 0;
         }
     }
-    for(int j=0; j<J[1]; j++){
-        for(int k=0; k<K[1]; k++) {
-//            V[j][k] = u(e);
-            V[j][k] = 1;
+    for(int i=0; i<J[1]; i++){
+        for(int j=0; j<K[1]; j++) {
+            V[i][j] = 0;
         }
     }
-    for(int j=0; j<J[2]; j++){
-        for(int k=0; k<K[2]; k++) {
-//            W[j][k] = u(e);
-            W[j][k] = 1;
+    for(int i=0; i<J[2]; i++){
+        for(int j=0; j<K[2]; j++) {
+            W[i][j] = 0;
         }
     }
-
-
-    /* allocate memory for the matrices Rs */
-    double ** r1 = new double*[K[0]];
-    double ** r2 = new double*[K[1]];
-    double ** r3 = new double*[K[2]];
-    for(int index = 0; index < K[0]; index++) {
-        r1[index] = new double[K[0]];
+    int cnt = J[0]/K[0];
+    for(int j=0; j<K[0]; j++){
+        for(int i=0; i<cnt; i++) {
+            U[j+i*K[0]][j]=1/ sqrt(cnt);
+        }
     }
-    for(int index = 0; index < K[1]; index++) {
-        r2[index] = new double[K[1]];
+    cnt = J[1]/K[1];
+    for(int j=0; j<K[1]; j++){
+        for(int i=0; i<cnt; i++) {
+            V[j+i*K[1]][j]=1/ sqrt(cnt);
+        }
     }
-    for(int index = 0; index < K[2]; index++) {
-        r3[index] = new double[K[2]];
+    cnt = J[2]/K[2];
+    for(int j=0; j<K[2]; j++){
+        for(int i=0; i<cnt; i++) {
+            W[j+i*K[2]][j]=1/ sqrt(cnt);
+        }
     }
-    print_matrix("U", U, J[0], K[0]);
-    print_matrix("V", V, J[1], K[1]);
-    print_matrix("W", W, J[2], K[2]);
+//    print_matrix("U", U, J[0], K[0]);
+//    print_matrix("V", V, J[1], K[1]);
+//    print_matrix("W", W, J[2], K[2]);
 //
-//    qr(U, J[0], K[0]);
-//    qr(V, J[1], K[1]);
-//    qr(W, J[2], K[2]);
+//    default_random_engine e(time(0));
+//    uniform_real_distribution<double> u(0,1);
+//    for(int j=0; j<J[0]; j++){
+//        for(int k=0; k<K[0]; k++) {
+//            U[j][k] = u(e);
+//        }
+//    }
+//    for(int j=0; j<J[1]; j++){
+//        for(int k=0; k<K[1]; k++) {
+//            V[j][k] = u(e);
+//        }
+//    }
+//    for(int j=0; j<J[2]; j++){
+//        for(int k=0; k<K[2]; k++) {
+//            W[j][k] = u(e);
+//        }
+//    }
 //
 //    print_matrix("U", U, J[0], K[0]);
 //    print_matrix("V", V, J[1], K[1]);
 //    print_matrix("W", W, J[2], K[2]);
+
+    /* allocate memory for the matrices Rs */
+//    double ** r1 = new double*[K[0]];
+//    double ** r2 = new double*[K[1]];
+//    double ** r3 = new double*[K[2]];
+//    for(int index = 0; index < K[0]; index++) {
+//        r1[index] = new double[K[0]];
+//    }
+//    for(int index = 0; index < K[1]; index++) {
+//        r2[index] = new double[K[1]];
+//    }
+//    for(int index = 0; index < K[2]; index++) {
+//        r3[index] = new double[K[2]];
+//    }
+//    qr(U, J[0], K[0]);
+//    qr(V, J[1], K[1]);
+//    qr(W, J[2], K[2]);
+
 //    print_matrix("r1", r1, K[0],K[0]);
 //    print_matrix("r2", r2, K[1],K[1]);
 //    print_matrix("r3", r3, K[2],K[2]);
@@ -295,18 +335,18 @@ int main () {
 //    }
 //    std::cout << std::endl;
 
-    for(int i = 0; i < K[0]; i++) {
-        delete[] r1[i];
-    }
-    for(int i = 0; i < K[1]; i++) {
-        delete[] r2[i];
-    }
-    for(int i = 0; i < K[2]; i++) {
-        delete[] r3[i];
-    }
-    delete[] r1;
-    delete[] r2;
-    delete[] r3;
+//    for(int i = 0; i < K[0]; i++) {
+//        delete[] r1[i];
+//    }
+//    for(int i = 0; i < K[1]; i++) {
+//        delete[] r2[i];
+//    }
+//    for(int i = 0; i < K[2]; i++) {
+//        delete[] r3[i];
+//    }
+//    delete[] r1;
+//    delete[] r2;
+//    delete[] r3;
 
     /* free memory */
     for(int i = 0; i < K[0]; i++) {
