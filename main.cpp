@@ -77,7 +77,6 @@ int main () {
 //    fill(V[0], V[0] + J[1] * K[1], 0);
 //    fill(W[0], W[0] + J[2] * K[2], 0);
 
-    map<int[],double> G1=spttm_mode(mytensor,U,J,K[0],1);
 
     double **U = new double*[J[0]];
     for(int index = 0; index < J[0]; index++) {
