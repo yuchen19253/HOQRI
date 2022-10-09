@@ -28,8 +28,12 @@ int main () {
 //   int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
 //   int J[3] = {5,5,5};
 
-   int K[3] = {10,10,10};
+    int K[3] = {15,10,5};
+//   int K[3] = {10,10,10};
+//    int K[3] = {10,15,20};
+//    int K[3] = {20,25,30};
 //   int K[3] = {4,3,2};
+
     if(J[0]<K[0]||J[1]<K[1]||J[2]<K[2]){
         cout<<"Rank couldn't be large than original size!";
         return 0;
@@ -37,12 +41,12 @@ int main () {
     // read X from tensor file
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
-//    string filename = "/home/yuchen/Desktop/mytensor.txt";
-//    string filename = "/home/yuchen/Desktop/data/Large_MovieLen.txt";
+//    string filename = "/home/yuchen/Desktop/data/mytensor.txt";
+//    string filename = "/home/yuchen/Desktop/data/data/Large_MovieLen.txt";
     string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
-//    string filename = "/home/yuchen/Desktop/MovieLen.txt";
-//    string filename = "/home/yuchen/Desktop/Last.txt";
-//    string filename = "/home/yuchen/Desktop/Delicious.txt";
+//    string filename = "/home/yuchen/Desktop/data/MovieLen.txt";
+//    string filename = "/home/yuchen/Desktop/data/Last.txt";
+//    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
     tensorfile.open(filename,ios::in);
 
     if(tensorfile.is_open()){
@@ -90,60 +94,61 @@ int main () {
     for(int index = 0; index < J[2]; index++) {
         W[index] = new double[K[2]];
     }
-    for(int i=0; i<J[0]; i++){
-        for(int j=0; j<K[0]; j++) {
-            U[i][j] = 0;
-        }
-    }
-    for(int i=0; i<J[1]; i++){
-        for(int j=0; j<K[1]; j++) {
-            V[i][j] = 0;
-        }
-    }
-    for(int i=0; i<J[2]; i++){
-        for(int j=0; j<K[2]; j++) {
-            W[i][j] = 0;
-        }
-    }
-    int cnt = J[0]/K[0];
-    for(int j=0; j<K[0]; j++){
-        for(int i=0; i<cnt; i++) {
-            U[j+i*K[0]][j]=1/ sqrt(cnt);
-        }
-    }
-    cnt = J[1]/K[1];
-    for(int j=0; j<K[1]; j++){
-        for(int i=0; i<cnt; i++) {
-            V[j+i*K[1]][j]=1/ sqrt(cnt);
-        }
-    }
-    cnt = J[2]/K[2];
-    for(int j=0; j<K[2]; j++){
-        for(int i=0; i<cnt; i++) {
-            W[j+i*K[2]][j]=1/ sqrt(cnt);
-        }
-    }
+//    for(int i=0; i<J[0]; i++){
+//        for(int j=0; j<K[0]; j++) {
+//            U[i][j] = 0;
+//        }
+//    }
+//    for(int i=0; i<J[1]; i++){
+//        for(int j=0; j<K[1]; j++) {
+//            V[i][j] = 0;
+//        }
+//    }
+//    for(int i=0; i<J[2]; i++){
+//        for(int j=0; j<K[2]; j++) {
+//            W[i][j] = 0;
+//        }
+//    }
+//    int cnt = J[0]/K[0];
+//    for(int j=0; j<K[0]; j++){
+//        for(int i=0; i<cnt; i++) {
+//            U[j+i*K[0]][j]=1/ sqrt(cnt);
+//        }
+//    }
+//    cnt = J[1]/K[1];
+//    for(int j=0; j<K[1]; j++){
+//        for(int i=0; i<cnt; i++) {
+//            V[j+i*K[1]][j]=1/ sqrt(cnt);
+//        }
+//    }
+//    cnt = J[2]/K[2];
+//    for(int j=0; j<K[2]; j++){
+//        for(int i=0; i<cnt; i++) {
+//            W[j+i*K[2]][j]=1/ sqrt(cnt);
+//        }
+//    }
+
 //    print_matrix("U", U, J[0], K[0]);
 //    print_matrix("V", V, J[1], K[1]);
 //    print_matrix("W", W, J[2], K[2]);
 //
-//    default_random_engine e(time(0));
-//    uniform_real_distribution<double> u(0,1);
-//    for(int j=0; j<J[0]; j++){
-//        for(int k=0; k<K[0]; k++) {
-//            U[j][k] = u(e);
-//        }
-//    }
-//    for(int j=0; j<J[1]; j++){
-//        for(int k=0; k<K[1]; k++) {
-//            V[j][k] = u(e);
-//        }
-//    }
-//    for(int j=0; j<J[2]; j++){
-//        for(int k=0; k<K[2]; k++) {
-//            W[j][k] = u(e);
-//        }
-//    }
+    default_random_engine e(time(0));
+    uniform_real_distribution<double> u(0,1);
+    for(int j=0; j<J[0]; j++){
+        for(int k=0; k<K[0]; k++) {
+            U[j][k] = u(e);
+        }
+    }
+    for(int j=0; j<J[1]; j++){
+        for(int k=0; k<K[1]; k++) {
+            V[j][k] = u(e);
+        }
+    }
+    for(int j=0; j<J[2]; j++){
+        for(int k=0; k<K[2]; k++) {
+            W[j][k] = u(e);
+        }
+    }
 //
 //    print_matrix("U", U, J[0], K[0]);
 //    print_matrix("V", V, J[1], K[1]);
@@ -177,6 +182,9 @@ int main () {
 
     cout<<"Initial norm of G: " << newLoss <<endl;
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
+
+    ofstream outfile;
+    outfile.open("/home/yuchen/Desktop/facebook.txt", ios::app);
 
     clock_t start = clock();
     for(int itr=1; itr <= iteration; itr++){
@@ -262,7 +270,10 @@ int main () {
 
         double norm_G = norm_tensor(G, K);
         std::cout << itr<< "\t\t" << (double)(clock() - start) / (double)CLOCKS_PER_SEC<< "\t\t" << lossChange<< "\t\t" << norm_G << endl;
+        outfile << itr<< "\t\t" << (double)(clock() - start) / (double)CLOCKS_PER_SEC<< "\t\t" << lossChange<< "\t\t" << norm_G << endl;
 
+        if(lossChange<1e-5)
+            break;
 
         for(int i = 0; i < K[0]; i++) {
             delete[] A1[i];
@@ -278,7 +289,7 @@ int main () {
         delete[] A3;
 
     }
-
+    outfile.close();
 
 
 //    /* print the matrix R resulting from gramSchmidt */
