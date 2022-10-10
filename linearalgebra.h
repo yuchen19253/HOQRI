@@ -54,6 +54,118 @@ void print_matrix(string name, double ** X, int I, int J){
     std::cout << std::endl;
 }
 
+double** myQR(double ** A, int m, int n) {
+    double ** Q = new double*[m];
+    double ** R = new double*[n];
+    for(int index = 0; index < m; index++) {
+        Q[index] = new double[n];
+    }
+    for(int index = 0; index < n; index++) {
+        R[index] = new double[n];
+    }
+    double nm = 0;
+    for(int row=0; row<m; row++)
+        nm += A[row][0]*A[row][0];
+    R[0][0] = sqrt(nm);
+    for(int row=0; row<m; row++)
+        Q[row][0] = A[row][0]/R[0][0];
+    for(int j = 1; j<n; j++){
+        for(int row=0; row<m; row++)
+            Q[row][j] = A[row][j];
+        for(int i=0; i<j; i++){
+            double innerProd = 0;
+            for(int row=0; row<m; row++)
+                innerProd += A[row][j] * Q[row][i];
+            R[i][j] = innerProd;
+            for(int row=0; row<m; row++)
+                Q[row][j]-= innerProd*Q[row][i];
+        }
+        nm = 0;
+        for(int row=0; row<m; row++)
+            nm += Q[row][j]*Q[row][j];
+        R[j][j] = sqrt(nm);
+        for(int row=0; row<m; row++)
+            Q[row][j] /= sqrt(nm);
+    }
+    return Q;
+}
+
+void QR(double ** a, int m, int n){
+    int i, row;
+    double anorm, tol = 10e-7;
+
+    double ** r = new double*[n];
+    for(int index = 0; index < n; index++) {
+        r[index] = new double[n];
+    }
+
+    for(i = 0; i < n; i++) {
+        double nm = 0;
+        for(row=0; row<m; row++)
+            nm += a[row][i]*a[row][i];
+        r[i][i] = sqrt(nm);                  // r_ii = ||a_i||
+
+        if(r[i][i] > tol) {
+            for(row=0; row<m; row++)
+                a[row][i] /= r[i][i];
+        }
+        else if(i == 0) { // set a[0] = [1 0 0 ... 0]^T
+            a[0][i] = 1;
+            for(row = 1; row < m; row++) {
+                a[row][i] = 0;
+            }
+        }
+        else{ // need to choose a_i orthogonal to < a_1, ... a_{i-1} >
+            for(row=0; row<m%5; row++)
+                a[row][i] = -a[i][0] * a[row][0];
+            for(; row < m; row+=5) {
+                a[row][i] = -a[i][0] * a[row][0];
+                a[row+1][i] = -a[i][0] * a[row+1][0];
+                a[row+2][i] = -a[i][0] * a[row+2][0];
+                a[row+3][i] = -a[i][0] * a[row+3][0];
+                a[row+4][i] = -a[i][0] * a[row+4][0];
+            }
+            a[i][i] += 1;
+
+            for(int col = 1; col < i; col++) {
+                for(row=0; row<m%5; row++)
+                    a[row][i] -= a[i][col] * a[row][col];
+                for(; row < m; row+=5) {
+                    a[row][i] -= a[i][col] * a[row][col];
+                    a[row+1][i] -= a[i][col] * a[row+1][col];
+                    a[row+2][i] -= a[i][col] * a[row+2][col];
+                    a[row+3][i] -= a[i][col] * a[row+3][col];
+                    a[row+4][i] -= a[i][col] * a[row+4][col];
+                }
+            }
+
+            nm = 0;
+            for(row=0; row<m; row++)
+                nm += a[row][i]*a[row][i];
+            anorm = sqrt(nm);
+
+            for(row=0; row<m; row++)
+                a[row][i] /= anorm;
+        }
+
+        for(int col = i+1; col < n; col++) {
+            double innerProd = 0;
+            for(row=0; row<m; row++)
+                innerProd += a[row][i] * a[row][col];
+            r[col][i] = innerProd; // r_ij = a_i*a_j
+            for(row=0; row<m%5; row++)
+                a[row][col] -= r[col][i] * a[row][i];
+            for(; row < m; row+=5) {
+                a[row][col] -= r[col][i] * a[row][i];       // a_j -= r_ij*a_i
+                a[row+1][col] -= r[col][i] * a[row+1][i];
+                a[row+2][col] -= r[col][i] * a[row+2][i];
+                a[row+3][col] -= r[col][i] * a[row+3][i];
+                a[row+4][col] -= r[col][i] * a[row+4][i];
+            }
+        }
+    }
+}
+
 /* ----------------------- norm ----------------------- */
 /*  l2-norm.
 

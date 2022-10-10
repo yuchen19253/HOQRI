@@ -22,16 +22,16 @@ int main () {
 
     // J and K
 //   int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
-   int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-//   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
+//   int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
 //   int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
 //   int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
 //   int J[3] = {5,5,5};
 
-    int K[3] = {15,10,5};
+//    int K[3] = {15,10,5};
 //   int K[3] = {10,10,10};
 //    int K[3] = {10,15,20};
-//    int K[3] = {20,25,30};
+    int K[3] = {20,25,30};
 //   int K[3] = {4,3,2};
 
     if(J[0]<K[0]||J[1]<K[1]||J[2]<K[2]){
@@ -43,10 +43,10 @@ int main () {
     fstream tensorfile;
 //    string filename = "/home/yuchen/Desktop/data/mytensor.txt";
 //    string filename = "/home/yuchen/Desktop/data/data/Large_MovieLen.txt";
-    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
+//    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
 //    string filename = "/home/yuchen/Desktop/data/MovieLen.txt";
 //    string filename = "/home/yuchen/Desktop/data/Last.txt";
-//    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
+    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
     tensorfile.open(filename,ios::in);
 
     if(tensorfile.is_open()){
@@ -184,7 +184,7 @@ int main () {
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
 
     ofstream outfile;
-    outfile.open("/home/yuchen/Desktop/facebook.txt", ios::app);
+    outfile.open("/home/yuchen/Desktop/delicious.txt", ios::app);
 
     clock_t start = clock();
     for(int itr=1; itr <= iteration; itr++){
@@ -222,13 +222,13 @@ int main () {
         double **A1 = TTMcTC_update(mytensor,G,U,V,W,J,K,1);
 //        cout<< "calculate A1 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         // Calculate new U via QR
-        for(int j=0; j<J[0]; j++){
-            for(int k=0; k<K[0]; k++) {
-                U[j][k] = A1[j][k];
-            }
-        }
+//        for(int j=0; j<J[0]; j++){
+//            for(int k=0; k<K[0]; k++) {
+//                U[j][k] = A1[j][k];
+//            }
+//        }
 
-        qr(U, J[0], K[0]);
+
 //        print_matrix("newU", U, J[0],K[0]);
 //        cout<< "calculate U "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
@@ -236,13 +236,13 @@ int main () {
         double **A2 = TTMcTC_update(mytensor,G,U,V,W,J,K,2);
 //        cout<< "calculate A2 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         // Calculate new V via QR
-        for(int j=0; j<J[1]; j++){
-            for(int k=0; k<K[1]; k++) {
-                V[j][k] = A2[j][k];
-            }
-        }
+//        for(int j=0; j<J[1]; j++){
+//            for(int k=0; k<K[1]; k++) {
+//                V[j][k] = A2[j][k];
+//            }
+//        }
         /* execute gramSchmidt to compute QR factorization */
-        qr(V, J[1], K[1]);
+
 //        cout<< "calculate V "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newV", V, J[1],K[1]);
@@ -252,13 +252,15 @@ int main () {
         double **A3 = TTMcTC_update(mytensor,G,U,V,W,J,K,3);
 //        cout<< "calculate A3 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         // Calculate new W via QR
-        for(int j=0; j<J[2]; j++){
-            for(int k=0; k<K[2]; k++) {
-                W[j][k] = A3[j][k];
-            }
-        }
+//        for(int j=0; j<J[2]; j++){
+//            for(int k=0; k<K[2]; k++) {
+//                W[j][k] = A3[j][k];
+//            }
+//        }
         /* execute gramSchmidt to compute QR factorization */
-        qr(W, J[2], K[2]);
+        U = myQR(A1, J[0], K[0]);
+        V = myQR(A2, J[1], K[1]);
+        W = myQR(A3, J[2], K[2]);
 //        cout<< "calculate W "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newW", W, J[2],K[2]);
