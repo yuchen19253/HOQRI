@@ -89,6 +89,71 @@ double** myQR(double ** A, int m, int n) {
     }
     return Q;
 }
+double** myQR2(double ** A, int m, int n) {
+    double ** Q = new double*[m];
+    double ** R = new double*[n];
+    for(int index = 0; index < m; index++) {
+        Q[index] = new double[n];
+    }
+    for(int index = 0; index < n; index++) {
+        R[index] = new double[n];
+    }
+    double nm = 0;
+    int row=0;
+    for(row=0; row<m; row++)
+        nm += A[row][0]*A[row][0];
+    R[0][0] = sqrt(nm);
+
+    for(row=0;row<m%5; row++)
+        Q[row][0] = A[row][0]/R[0][0];
+    for(;row<m; row+=5){
+        Q[row][0] = A[row][0]/R[0][0];
+        Q[row+1][0] = A[row+1][0]/R[0][0];
+        Q[row+2][0] = A[row+2][0]/R[0][0];
+        Q[row+3][0] = A[row+3][0]/R[0][0];
+        Q[row+4][0] = A[row+4][0]/R[0][0];
+    }
+    for(int j = 1; j<n; j++){
+        for(row=0; row<m%5; row++)
+            Q[row][j] = A[row][j];
+        for(;row<m; row+=5){
+            Q[row][j] = A[row][j];
+            Q[row+1][j] = A[row+1][j];
+            Q[row+2][j] = A[row+2][j];
+            Q[row+3][j] = A[row+3][j];
+            Q[row+4][j] = A[row+4][j];
+        }
+        for(int i=0; i<j; i++){
+            double innerProd = 0;
+            for(row=0; row<m%5; row++)
+                innerProd += A[row][j] * Q[row][i];
+            for(;row<m; row+=5){
+                innerProd += A[row][j] * Q[row][i];
+                innerProd += A[row+1][j] * Q[row+1][i];
+                innerProd += A[row+2][j] * Q[row+2][i];
+                innerProd += A[row+3][j] * Q[row+3][i];
+                innerProd += A[row+4][j] * Q[row+4][i];
+            }
+            R[i][j] = innerProd;
+            for(row=0; row<m; row++)
+                Q[row][j]-= innerProd*Q[row][i];
+            for(;row<m; row+=5){
+                Q[row][j]-= innerProd*Q[row][i];
+                Q[row+1][j]-= innerProd*Q[row+1][i];
+                Q[row+2][j]-= innerProd*Q[row+2][i];
+                Q[row+3][j]-= innerProd*Q[row+3][i];
+                Q[row+4][j]-= innerProd*Q[row+4][i];
+            }
+        }
+        nm = 0;
+        for(row=0; row<m; row++)
+            nm += Q[row][j]*Q[row][j];
+        R[j][j] = sqrt(nm);
+        for(row=0; row<m; row++)
+            Q[row][j] /= sqrt(nm);
+    }
+    return Q;
+}
 
 void QR(double ** a, int m, int n){
     int i, row;

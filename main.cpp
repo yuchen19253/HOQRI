@@ -22,8 +22,8 @@ int main () {
 
     // J and K
 //   int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros
-//   int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
-   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
+   int J[3] = {46952,46951,1592}; //facebook: 46952 x 46951 x 1592 with 738079 nonzeros
+//   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros
 //   int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros
 //   int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros
 //   int J[3] = {5,5,5};
@@ -31,7 +31,7 @@ int main () {
 //    int K[3] = {15,10,5};
 //   int K[3] = {10,10,10};
 //    int K[3] = {10,15,20};
-    int K[3] = {20,25,30};
+    int K[3] = {20,20,20};
 //   int K[3] = {4,3,2};
 
     if(J[0]<K[0]||J[1]<K[1]||J[2]<K[2]){
@@ -42,11 +42,11 @@ int main () {
     map<tuple<int,int,int>,double> mytensor;
     fstream tensorfile;
 //    string filename = "/home/yuchen/Desktop/data/mytensor.txt";
-//    string filename = "/home/yuchen/Desktop/data/data/Large_MovieLen.txt";
-//    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
+//    string filename = "/home/yuchen/Desktop/data/Large_MovieLen.txt";
+    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
 //    string filename = "/home/yuchen/Desktop/data/MovieLen.txt";
 //    string filename = "/home/yuchen/Desktop/data/Last.txt";
-    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
+//    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
     tensorfile.open(filename,ios::in);
 
     if(tensorfile.is_open()){
@@ -217,8 +217,9 @@ int main () {
 
 //        cout<< "calculate norm(G) "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
-
+        clock_t startA = clock();
         // Calculate A1
+
         double **A1 = TTMcTC_update(mytensor,G,U,V,W,J,K,1);
 //        cout<< "calculate A1 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         // Calculate new U via QR
@@ -252,18 +253,37 @@ int main () {
         double **A3 = TTMcTC_update(mytensor,G,U,V,W,J,K,3);
 //        cout<< "calculate A3 "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         // Calculate new W via QR
-//        for(int j=0; j<J[2]; j++){
-//            for(int k=0; k<K[2]; k++) {
-//                W[j][k] = A3[j][k];
-//            }
-//        }
+        cout<< "calculate A "<< (double)(clock() - startA) / (double)CLOCKS_PER_SEC << endl;
+//
+        clock_t startqr = clock();
+        for(int j=0; j<J[0]; j++){
+            for(int k=0; k<K[0]; k++) {
+                U[j][k] = A1[j][k];
+            }
+        }
+        for(int j=0; j<J[1]; j++){
+            for(int k=0; k<K[1]; k++) {
+                V[j][k] = A2[j][k];
+            }
+        }
+        for(int j=0; j<J[2]; j++){
+            for(int k=0; k<K[2]; k++) {
+                W[j][k] = A3[j][k];
+            }
+        }
+        cout<< "calculate qr "<< (double)(clock() - startqr) / (double)CLOCKS_PER_SEC << endl;
+        QR(U,J[0], K[0]);
+        QR(V,J[1], K[1]);
+        QR(W,J[2], K[2]);
+
         /* execute gramSchmidt to compute QR factorization */
-        U = myQR(A1, J[0], K[0]);
-        V = myQR(A2, J[1], K[1]);
-        W = myQR(A3, J[2], K[2]);
-//        cout<< "calculate W "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
+//        U = myQR(A1, J[0], K[0]);
+//        V = myQR(A2, J[1], K[1]);
+//        W = myQR(A3, J[2], K[2]);
+//        cout<< "calculate qr "<< (double)(clock() - start) / (double)CLOCKS_PER_SEC << endl;
         /* print the matrix Q resulting from gramSchmidt */
 //        print_matrix("newW", W, J[2],K[2]);
+
 
         oldLoss = newLoss;
         G = ttm_update(mytensor, U, V, W, K);
@@ -272,7 +292,7 @@ int main () {
 
         double norm_G = norm_tensor(G, K);
         std::cout << itr<< "\t\t" << (double)(clock() - start) / (double)CLOCKS_PER_SEC<< "\t\t" << lossChange<< "\t\t" << norm_G << endl;
-        outfile << itr<< "\t\t" << (double)(clock() - start) / (double)CLOCKS_PER_SEC<< "\t\t" << lossChange<< "\t\t" << norm_G << endl;
+        outfile << "QR " << itr<< "\t\t" << (double)(clock() - start) / (double)CLOCKS_PER_SEC<< "\t\t" << lossChange<< "\t\t" << norm_G << endl;
 
         if(lossChange<1e-5)
             break;
