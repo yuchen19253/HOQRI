@@ -22,8 +22,11 @@ Take a 5\*5\*5 tensor for example, the number of nonzero elements is 6. The tens
 ## How to run
 Open the path of downloaded project
 
-Compile using `g++ *.cpp -o HOQRI`
+Compile:
 
-Run `<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath>`, TensorDimension and Rank are of size 3, splitted by comma.
+For Linux and Windows system, using `g++ *.cpp -o HOQRI`
+For MacOS, using `clang++ -std=c++11 *.cpp -o HOQRI`
+
+Run: `<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath>`, TensorDimension and Rank are of size 3, splitted by comma.
 
 For example, `<install_path>/HOQRI 5,5,5 2,3,4 '<install_path>/mytensor.txt'`
