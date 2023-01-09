@@ -1,7 +1,7 @@
 #ifndef HOQRI_LINEARALGEBRA_H
 #define HOQRI_LINEARALGEBRA_H
-using namespace std;
 #include <cmath>
+using namespace std;
 
 /* ----------------------- norm ----------------------- */
 /*  l2-norm.
