@@ -31,7 +31,7 @@ As shown in our paper, the dimensions of these datasets are
 | 10M-MoiveLen | 162541, 49994, 9083 | 20503478 |
 
 ## How to run
-Open the path of downloaded project
+Go to the path of downloaded project
 
 #### Compile
 Linux and Windows system: `g++ *.cpp -o HOQRI`
