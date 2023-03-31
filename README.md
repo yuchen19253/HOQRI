@@ -39,6 +39,6 @@ Linux and Windows system: `g++ *.cpp -o HOQRI`
 MacOS: `clang++ -std=c++11 *.cpp -o HOQRI`
 
 #### Run 
-`<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath>`, TensorDimension and Rank are of size 3, splitted by comma.
+`<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath> <MaxIteration>`, TensorDimension and Rank are of size 3, splitted by comma.
 
-For example, `<install_path>/HOQRI 5,5,5 2,3,4 '<install_path>/mytensor.txt'`
+For example, `<install_path>/HOQRI 5,5,5 2,3,4 '<install_path>/mytensor.txt' 100`
