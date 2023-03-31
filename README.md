@@ -19,11 +19,26 @@ Take a 5\*5\*5 tensor for example, the number of nonzero elements is 6. The tens
 5 4 4 1.1
 </pre></dl>
 
+The Facebook, 1M-MovieLen, Last and Delicious datasets are in the 'dataset.zip'. 10M-MovieLen is not uploaded due to the large size.
+
+As shown in our paper, the dimensions of these datasets are
+| Dataset  | Size | nnz |
+| ------------- | ------------- | ------------- |
+| Facebook  | 46952, 46951, 1592  | 738079 |
+| MovieLen | 610, 49961, 8215 | 84159 |
+| Last | 2100, 18744, 12647 | 186479 |
+| Delicious | 108035, 107253, 52955 | 437593 |
+| 10M-MoiveLen | 162541, 49994, 9083 | 20503478 |
+
 ## How to run
-Open the path of downloaded project
+Go to the path of downloaded project
 
-Compile using `g++ *.cpp -o HOQRI`
+#### Compile
+Linux and Windows system: `g++ *.cpp -o HOQRI`
 
-Run `<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath>`, TensorDimension and Rank are of size 3, splitted by comma.
+MacOS: `clang++ -std=c++11 *.cpp -o HOQRI`
+
+#### Run 
+`<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath>`, TensorDimension and Rank are of size 3, splitted by comma.
 
 For example, `<install_path>/HOQRI 5,5,5 2,3,4 '<install_path>/mytensor.txt'`
