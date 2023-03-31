@@ -20,14 +20,21 @@
 using namespace std;
 
 int main (int argc, char *argv[]) {
-    if(argc != 4 ){
+    int iteration = 100;
+    if(argc > 5 || argc < 4){
         cout<<"Input error! Tensor Dimension, Rank and data file needed."<<endl;
-        cout<<"Format: I1,I2,I3 r1,r2,r3 'DataFilePath'";
+        cout<<"Format: I1,I2,I3 r1,r2,r3 'DataFilePath' (MaxIter)";
         return -1;
     }
     int* J = argv_split(argv[1]);
     int* K = argv_split(argv[2]);
     string filename = argv[3];
+    if(argc == 5){
+        std::stringstream s1(argv[4]);
+        s1 >> iteration;
+    }
+
+    cout<<"Max Iteration = " << iteration<<endl;
 
     // J and K
 //   int J[3] = {100000,100000,100000}; // synthetic data;
@@ -118,10 +125,15 @@ int main (int argc, char *argv[]) {
         }
     }
 
+//    print_matrix("U", U, J[0], K[0]);
+//    print_matrix("V", V, J[1], K[1]);
+//    print_matrix("W", W, J[2], K[2]);
+
     // update iteration
-    int iteration = 10;
     double *** G = ttm_update(mytensor, U, V, W, K);
     double newLoss = norm_tensor(G,K), oldLoss(0), lossChange(0);
+
+//    print_densetensor("G",G,K);
 
     cout<<"Initial norm of G: " << newLoss <<endl;
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
@@ -129,35 +141,52 @@ int main (int argc, char *argv[]) {
 //    ofstream outfile;
 //    outfile.open("/home/yuchen/Desktop/hoqri_rank.txt", ios::app);
     clock_t start = clock();
+
+
+    // USE ttv
+
+
+    // USE TTMcTC
     for(int itr=1; itr <= iteration; itr++){
         //        cout<< " " << (double)(clock() - start) / (double)CLOCKS_PER_SEC<<endl;
 
         // Calculate A1
         double **A1 = TTMcTC_update(mytensor,G,U,V,W,J,K,1);
-        // Calculate A2
-        double **A2 = TTMcTC_update(mytensor,G,U,V,W,J,K,2);
-        // Calculate A3
-        double **A3 = TTMcTC_update(mytensor,G,U,V,W,J,K,3);
-
         /* execute gramSchmidt to compute QR factorization */
+        // update U
         for(int j=0; j<J[0]; j++){
             for(int k=0; k<K[0]; k++) {
                 U[j][k] = A1[j][k];
             }
         }
+        QR(U,J[0], K[0]);
+//        print_matrix("U", U, J[0], K[0]);
+
+        G = ttm_update(mytensor, U, V, W, K);
+//        print_densetensor("G",G,K);
+        // Calculate A2
+        double **A2 = TTMcTC_update(mytensor,G,U,V,W,J,K,2);
+        // update V
         for(int j=0; j<J[1]; j++){
             for(int k=0; k<K[1]; k++) {
                 V[j][k] = A2[j][k];
             }
         }
+        QR(V,J[1], K[1]);
+//        print_matrix("V", V, J[1], K[1]);
+
+        G = ttm_update(mytensor, U, V, W, K);
+//        print_densetensor("G",G,K);
+        // Calculate A3
+        double **A3 = TTMcTC_update(mytensor,G,U,V,W,J,K,3);
+        // update W
         for(int j=0; j<J[2]; j++){
             for(int k=0; k<K[2]; k++) {
                 W[j][k] = A3[j][k];
             }
         }
-        QR(U,J[0], K[0]);
-        QR(V,J[1], K[1]);
         QR(W,J[2], K[2]);
+//        print_matrix("W", W, J[2], K[2]);
 
         /* execute gramSchmidt to compute QR factorization */
 //        U = myQR(A1, J[0], K[0]);
@@ -166,6 +195,7 @@ int main (int argc, char *argv[]) {
 
         oldLoss = newLoss;
         G = ttm_update(mytensor, U, V, W, K);
+//        print_densetensor("G",G,K);
         newLoss = norm_tensor(G,K);
         lossChange = abs(newLoss - oldLoss);
 

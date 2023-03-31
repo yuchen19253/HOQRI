@@ -16,4 +16,5 @@ double*** ttm_update(map<tuple<int,int,int>,double> spX, double ** U, double ** 
 double** TTMcTC_update(map<tuple<int,int,int>,double> X, double*** G, double **U, double **V, double **W, int J[], int K[], int mode);
 
 
+
 #endif //KEYFUNCTION_H
