@@ -39,8 +39,8 @@ int main (int argc, char *argv[]) {
 
 //    ofstream outfile;
 //    outfile.open("/home/yuchen/Desktop/Delicious.txt", ios::app);
+
     // J and K
-//   int J[3] = {100000,100000,100000}; // synthetic data;
 //   int J[3] = {46952,46951,1592}; //Facebook: 46952,46951,1592 with 738079 nonzeros (2.1e-7)
 //   int J[3] = {610,49961,8215}; //MovieLen: 610,49961,8215 with 84159 nonzeros (3.36e-7)
 //   int J[3] = {2100, 18744, 12647}; //Last: 2100,18744,12647 with 186479 nonzeros (3.7e-7)
