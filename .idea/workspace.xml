@@ -18,8 +18,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8e80797-7434-41f8-8906-c182d530417e" name="Changes" comment="edited version">
-      <change beforePath="$PROJECT_DIR$/keyFunction.h" beforeDir="false" afterPath="$PROJECT_DIR$/keyFunction.h" afterDir="false" />
+    <list default="true" id="a8e80797-7434-41f8-8906-c182d530417e" name="Changes" comment="updated">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +100,7 @@
       <workItem from="1679843045797" duration="375000" />
       <workItem from="1679843477640" duration="5138000" />
       <workItem from="1679875274625" duration="2083000" />
-      <workItem from="1680179228028" duration="2078000" />
+      <workItem from="1680179228028" duration="6841000" />
     </task>
     <task id="LOCAL-00001" summary="initial as ones">
       <created>1663545502477</created>
@@ -179,7 +179,28 @@
       <option name="project" value="LOCAL" />
       <updated>1673234294821</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="G-A-U-G-B-V-G-C-W">
+      <created>1680293378078</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1680293378078</updated>
+    </task>
+    <task id="LOCAL-00013" summary="G-A-U-G-B-V-G-C-W">
+      <created>1680293410858</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1680293410858</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated">
+      <created>1680293549179</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1680293549179</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -202,6 +223,8 @@
     <MESSAGE value="random initialization" />
     <MESSAGE value="new QR" />
     <MESSAGE value="edited version" />
-    <option name="LAST_COMMIT_MESSAGE" value="edited version" />
+    <MESSAGE value="G-A-U-G-B-V-G-C-W" />
+    <MESSAGE value="updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated" />
   </component>
 </project>

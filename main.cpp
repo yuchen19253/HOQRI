@@ -36,13 +36,16 @@ int main (int argc, char *argv[]) {
 
     cout<<"Max Iteration = " << iteration<<endl;
 
+
+//    ofstream outfile;
+//    outfile.open("/home/yuchen/Desktop/Delicious.txt", ios::app);
     // J and K
 //   int J[3] = {100000,100000,100000}; // synthetic data;
-//   int J[3] = {46952,46951,1592}; //Facebook: 46952 x 46951 x 1592 with 738079 nonzeros (2.1e-7)
-//   int J[3] = {610,49961,8215}; //1M_MovieLen: 610, 49961, 8215 with 84159 nonzeros (3.36e-7)
-//   int J[3] = {2100, 18744, 12647}; //Last: 2100 x 18744 x 12647 with 186479 nonzeros (3.7e-7)
-//   int J[3] = {108035, 107253, 52955}; //Delicious: 108035 x 107253 x 52955 with 437593 nonzeros (7.1e-10)
-//   int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541, 49994, 9083 with 20503478 nonzeros (2.7e-7)
+//   int J[3] = {46952,46951,1592}; //Facebook: 46952,46951,1592 with 738079 nonzeros (2.1e-7)
+//   int J[3] = {610,49961,8215}; //MovieLen: 610,49961,8215 with 84159 nonzeros (3.36e-7)
+//   int J[3] = {2100, 18744, 12647}; //Last: 2100,18744,12647 with 186479 nonzeros (3.7e-7)
+//   int J[3] = {108035, 107253, 52955}; //Delicious: 108035,107253,52955 with 437593 nonzeros (7.1e-10)
+//   int J[3] = {162541, 49994, 9083}; //10M_MovieLen: 162541,49994,9083 with 20503478 nonzeros (2.7e-7)
 
 //    int K[3] = {10,10,10};
 //    int K[3] = {20,20,10};
@@ -138,12 +141,7 @@ int main (int argc, char *argv[]) {
     cout<<"Initial norm of G: " << newLoss <<endl;
     cout<<"Itr\t\tTime\t\tLoss Change\t\tnorm(core)"<<endl;
 
-//    ofstream outfile;
-//    outfile.open("/home/yuchen/Desktop/hoqri_rank.txt", ios::app);
     clock_t start = clock();
-
-
-    // USE ttv
 
 
     // USE TTMcTC
