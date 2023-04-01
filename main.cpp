@@ -56,7 +56,7 @@ int main (int argc, char *argv[]) {
 
 //    string filename = "/home/yuchen/Desktop/e5.txt";
 //    string filename = "/home/yuchen/Desktop/data/Large_MovieLen.txt";
-//    string filename = "/home/yuchen/Desktop/data/facebook.txt"; // /Users/yc
+//    string filename = "/home/yuchen/Desktop/data/facebook.txt";
 //    string filename = "/home/yuchen/Desktop/data/MovieLen.txt";
 //    string filename = "/home/yuchen/Desktop/data/Last.txt";
 //    string filename = "/home/yuchen/Desktop/data/Delicious.txt";
