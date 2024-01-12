@@ -3,10 +3,10 @@ Yuchen Sun, Kejun Huang
 
 ## Citing
 
-## Requirements
-C++
-
-## Input file format
+## C++ implementation:
+### Requirements
+C++ environment
+### Input data format
 The data file lists all nonzeros elements. The first three colums are the indexes and the last colume is the corresponding value.
 Take a 5\*5\*5 tensor for example, the number of nonzero elements is 6. The tensor example exists in the root directory, named 'mytensor.txt':
 >
@@ -30,7 +30,7 @@ As shown in our paper, the dimensions of these datasets are
 | Delicious | 108035, 107253, 52955 | 437593 |
 | 10M-MoiveLen | 162541, 49994, 9083 | 20503478 |
 
-## How to run
+### How to run
 Go to the path of downloaded project
 
 #### Compile
@@ -42,3 +42,17 @@ MacOS: `clang++ -std=c++11 *.cpp -o HOQRI`
 `<install_path>/HOQRI <TensorDimension> <Rank> <DataFilePath> <MaxIteration>`, TensorDimension and Rank are of size 3, splitted by comma.
 
 For example, `<install_path>/HOQRI 5,5,5 2,3,4 '<install_path>/mytensor.txt' 100`
+
+
+## Matlab implementation
+
+### Requirements
+Matlab, [Tensor Toolbox](https://www.tensortoolbox.org/), [Tensorlab](https://www.tensorlab.net/doc/)
+
+### Input data format
+We using synthetic data in Matlab implementations. J defines the dimension and K defines the rank.
+
+### How to run
+Download the packages from [Tensor Toolbox](https://www.tensortoolbox.org/), [Tensorlab](https://www.tensorlab.net/doc/) following the instructions.
+
+Open the folder where `*.m` is located in matlab and run the `*.m` file.
